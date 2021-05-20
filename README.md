@@ -1,6 +1,6 @@
 # Todo List (todo-list)
 
-Simple Prokect
+A Simple TodoList project using Quasar, Vue, Vuex, Typescript
 
 ## Install the dependencies
 ```bash
