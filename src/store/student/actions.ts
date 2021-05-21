@@ -15,7 +15,7 @@ const actions: ActionTree<IStudent, StateInterface> = {
     } else {
       alert(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        `error can't be empty!`
+        'error cant be empty!'
       );
     }
   },
@@ -34,7 +34,21 @@ const actions: ActionTree<IStudent, StateInterface> = {
   },
 
   editStudent(context, payload: { [key: string]: string }) {
-    context.commit('editStudent', payload);
+    const student = payload;
+    const studentIndex = context.state.studentList.findIndex(
+      (s: { [key: string]: string }) => s.id == student.id
+    );
+    context.commit('editStudent', {
+      student,
+      studentIndex
+    });
+  },
+
+  deleteStudent(context, id: number) {
+    const studentIndex = context.state.studentList.findIndex(
+      (s: { [key: string]: number }) => s.id == id
+    );
+    context.commit('deleteStudent', studentIndex);
   }
 };
 
