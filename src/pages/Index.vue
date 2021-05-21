@@ -2,19 +2,34 @@
   <q-page class="q-pa-xl">
     <q-list bordered v-if="studentList.length != 0">
       <template v-for="(student, index) in studentList">
-        <q-item
-          clickable
-          v-ripple
-          :key="index"
-          @click="viewStudent(student.id)"
-        >
+        <q-item :key="index" class="row items-center">
           <q-item-section avatar>
             <q-icon color="primary" name="person" />
           </q-item-section>
           <q-item-section>Firstname: {{ student.firstname }}</q-item-section>
           <q-item-section>Lastname: {{ student.lastname }}</q-item-section>
-          <q-item-section avatar>
-            <q-icon color="red" name="edit" />
+          <q-item-section top side>
+            <div class="q-gutter-xs">
+              <q-btn
+                class="cursor-pointer"
+                color="green"
+                icon="edit"
+                size="12px"
+                flat
+                dense
+                round
+                @click.stop.prevent="viewStudent(student.id)"
+              /><q-btn
+                class="cursor-pointer"
+                color="red"
+                icon="delete"
+                size="12px"
+                flat
+                dense
+                round
+                @click.stop.prevent="deleteStudent(student.id)"
+              />
+            </div>
           </q-item-section>
         </q-item>
       </template>
@@ -58,7 +73,6 @@
 </template>
 
 <script lang="ts">
-import { promises } from 'dns';
 import { Vue, Component } from 'vue-property-decorator';
 import { mapState, mapActions } from 'vuex';
 
@@ -71,7 +85,7 @@ import { mapState, mapActions } from 'vuex';
   }
 })
 export default class PageIndex extends Vue {
-  studentList!: any;
+  studentList!: any[];
   studentInfo!: { [key: string]: string };
   dStudentInfo = {
     id: '',
@@ -98,6 +112,19 @@ export default class PageIndex extends Vue {
   async editStudent(): Promise<void> {
     await this.$store.dispatch('student/editStudent', this.dStudentInfo);
     this.showDialog = false;
+  }
+
+  deleteStudent(id: string): void {
+    this.$q
+      .dialog({
+        title: 'Delete',
+        message: 'Are you sure?',
+        color: 'red',
+        cancel: true
+      })
+      .onOk(async () => {
+        await this.$store.dispatch('student/deleteStudent', id);
+      });
   }
 
   dialogShowed(): void {
